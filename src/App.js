@@ -124,12 +124,15 @@ function App() {
   const [display, setDisplay] = useState('');
   const [volume, setVolume] = useState(0.5);
   const [checked, setChecked] = useState(false);
-  const [playBank, setPlayBank] = useState(bankOne)
+  const [playBank, setPlayBank] = useState(bankOne);
   const mediaVolume = volume;
+
   const handlePlay = target => {
-    target.childNodes[0].volume = mediaVolume;
-    target.childNodes[0].currentTime = 0;
-    target.childNodes[0].play();
+    if (target.childNodes[0].play) {
+      target.childNodes[0].volume = mediaVolume;
+      target.childNodes[0].currentTime = 0;
+      target.childNodes[0].play();
+    }
 
     setClickKey(target.id);
     setDisplay(
@@ -146,46 +149,60 @@ function App() {
   const handleClick = e => {
     handlePlay(e.target);
   };
+
   const handKeyDown = e => {
     const drumPad = document.querySelector(`div#${e.code.split('Key')[1]}`);
     if (drumPad) {
       handlePlay(drumPad);
     }
   };
+
   const handleVolChange = e => {
-    setVolume(e.target.value)
-  }
+    setVolume(e.target.value);
+  };
+
   const handleSwitchChange = e => {
     setChecked(checked => !checked);
-    console.log(checked)
-    if(!checked) {
-      setPlayBank(bankTwo)
+    console.log(checked);
+    if (!checked) {
+      setPlayBank(bankTwo);
     } else {
-      setPlayBank(bankOne)
+      setPlayBank(bankOne);
     }
-  }
+  };
+
   useEffect(() => {
     window.addEventListener('keydown', handKeyDown);
     return () => {
       window.removeEventListener('keydown', handKeyDown);
     };
   });
+
   return (
-    <div id='drum-machine'>
-      <Display display={display} />
-      <div className='pad-container'>
-        {playBank.map(n => (
-          <DrumPad
-            clip={n}
-            key={n.id}
-            onClick={handleClick}
-            clickKey={clickKey}
-          />
-        ))}
+    <>
+      <div className='title'>The React Drum Machine</div>
+      <div id='drum-machine'>
+        <div className='pad-container'>
+          {playBank.map(n => (
+            <DrumPad
+              clip={n}
+              key={n.id}
+              onClick={handleClick}
+              clickKey={clickKey}
+            />
+          ))}
+        </div>
+        <div className='controls'>
+          <VolumeSlider volume={volume} onChange={handleVolChange} />
+          <Display display={display} />
+          <div className='track'>
+            <span>Track 1</span>
+            <SwitchSet onChange={handleSwitchChange} checked={checked} />
+            <span>Track 2</span>
+          </div>
+        </div>
       </div>
-      <VolumeSlider volume={volume} onChange={handleVolChange} />
-      <SwitchSet onChange={handleSwitchChange} checked={checked}/>
-    </div>
+    </>
   );
 }
 
