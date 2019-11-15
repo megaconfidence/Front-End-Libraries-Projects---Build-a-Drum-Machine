@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Display from './components/display';
 import DrumPad from './components/drum-pad';
-import VolumeSlider from './components/volume-slider'
+import VolumeSlider from './components/volume-slider';
+import SwitchSet from './components/switch-set';
 
 const bankOne = [
   {
@@ -122,6 +123,8 @@ function App() {
   const [clickKey, setClickKey] = useState('');
   const [display, setDisplay] = useState('');
   const [volume, setVolume] = useState(0.5);
+  const [checked, setChecked] = useState(false);
+  const [playBank, setPlayBank] = useState(bankOne)
   const mediaVolume = volume;
   const handlePlay = target => {
     target.childNodes[0].volume = mediaVolume;
@@ -152,6 +155,15 @@ function App() {
   const handleVolChange = e => {
     setVolume(e.target.value)
   }
+  const handleSwitchChange = e => {
+    setChecked(checked => !checked);
+    console.log(checked)
+    if(!checked) {
+      setPlayBank(bankTwo)
+    } else {
+      setPlayBank(bankOne)
+    }
+  }
   useEffect(() => {
     window.addEventListener('keydown', handKeyDown);
     return () => {
@@ -162,7 +174,7 @@ function App() {
     <div id='drum-machine'>
       <Display display={display} />
       <div className='pad-container'>
-        {bankOne.map(n => (
+        {playBank.map(n => (
           <DrumPad
             clip={n}
             key={n.id}
@@ -172,6 +184,7 @@ function App() {
         ))}
       </div>
       <VolumeSlider volume={volume} onChange={handleVolChange} />
+      <SwitchSet onChange={handleSwitchChange} checked={checked}/>
     </div>
   );
 }
