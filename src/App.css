@@ -4,6 +4,9 @@
   font-style: italic;
   letter-spacing: 2px;
 }
+.title a {
+  font-size: 0.8em;
+}
 #drum-machine {
   display: flex;
   width: 500px;

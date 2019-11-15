@@ -180,7 +180,7 @@ function App() {
 
   return (
     <>
-      <div className='title'>The React Drum Machine</div>
+      <div className='title'>The React Drum Machine<a href="https://github.com/Confidence-Okoghenun/Front-End-Libraries-Projects---Build-a-Drum-Machine">(GitHub)</a></div>
       <div id='drum-machine'>
         <div className='pad-container'>
           {playBank.map(n => (
